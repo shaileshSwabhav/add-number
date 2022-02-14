@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"strconv"
 
@@ -16,7 +15,6 @@ type Number struct {
 }
 
 func main() {
-	fmt.Println(" ============= main  ============= ")
 
 	// Create router instance
 	router := fiber.New()
@@ -24,7 +22,7 @@ func main() {
 	registerRoute(router)
 
 	// start server
-	err := router.Listen(":4003")
+	err := router.Listen(":8080")
 	if err != nil {
 		log.Fatal(err)
 	}
