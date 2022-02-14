@@ -1,7 +1,69 @@
 package main
 
-import "fmt"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"log"
+	"strconv"
+
+	"github.com/gofiber/fiber/v2"
+)
+
+type Number struct {
+	FirstNumber  int `json:"firstNumber"`
+	SecondNumber int `json:"secondNumber"`
+}
 
 func main() {
 	fmt.Println(" ============= main  ============= ")
+
+	// Create router instance
+	router := fiber.New()
+
+	registerRoute(router)
+
+	// start server
+	err := router.Listen(":4003")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func registerRoute(router *fiber.App) {
+	router.Post("/add", addNumbers)
+}
+
+func addNumbers(c *fiber.Ctx) error {
+
+	var number Number
+
+	// unmarshall request body
+	err := unmarshalJSON(c, &number)
+	if err != nil {
+		return err
+	}
+
+	sum := number.FirstNumber + number.SecondNumber
+
+	return c.SendString(strconv.Itoa(sum))
+}
+
+// unmarshalJSON parses data from request and return otherwise error return.
+func unmarshalJSON(c *fiber.Ctx, out interface{}) error {
+	body := c.Body()
+
+	if body == nil {
+		return errors.New("empty body")
+	}
+
+	if len(body) == 0 {
+		return errors.New("empty body")
+	}
+
+	err := json.Unmarshal(body, out)
+	if err != nil {
+		return errors.New(err.Error())
+	}
+	return nil
 }
