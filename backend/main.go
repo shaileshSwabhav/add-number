@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 type Number struct {
@@ -18,6 +19,7 @@ func main() {
 
 	// Create router instance
 	router := fiber.New()
+	router.Use(cors.New())
 
 	registerRoute(router)
 
